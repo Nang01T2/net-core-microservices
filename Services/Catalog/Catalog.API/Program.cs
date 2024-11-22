@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Serilog;
 using System.Reflection;
+using System.Text;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,17 +85,35 @@ builder.Services.AddControllers();
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = "http://localhost:8009"; // Your Identity Server URL
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        // Uncomment the following code for debugging
+        // options.Events = new JwtBearerEvents
+        // {
+        //     OnAuthenticationFailed = context =>
+        //     {
+        //         Console.WriteLine($"Token validation failed: {context.Exception}");
+        //         return Task.CompletedTask;
+        //     }
+        // };
+        
+        options.Authority = "https://localhost:8009"; // Your Identity Server URL
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "http://localhost:8009",
+            ValidIssuer = "https://localhost:8009",
             ValidateAudience = true,
-            ValidAudience = "Catalog",
-            ValidateLifetime = true
+            ValidAudience = "catalogapi",
+            ValidateLifetime = true,
         };
-        options.RequireHttpsMetadata = false; // Set this to false for local development
     });
+
+// builder.Services.AddAuthorization(options =>
+// {
+//     options.AddPolicy("ApiScope", policy =>
+//     {
+//         policy.RequireAuthenticatedUser();
+//         policy.RequireClaim("scope", "catalogapi");
+//     });
+// });
 
 var app = builder.Build();
 

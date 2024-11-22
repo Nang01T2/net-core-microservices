@@ -14,17 +14,17 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("catalogapi"),
+            new ApiScope("catalogapi", "Catalog API")
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
             new ApiResource[]
             {
                 //List of Microservices can go here.
-                new ApiResource("Catalog", "Catalog.API")
+                new ApiResource("catalogapi", "Catalog API")
                 {
-                    Scopes = {"catalogapi"}
-                },
+                    Scopes = { "catalogapi" }
+                }
             };
 
     public static IEnumerable<Client> Clients =>
@@ -34,11 +34,14 @@ public static class Config
             new Client
             {
                 ClientId = "CatalogApiClient",
-                ClientName = "Catalog API Client",
-
+                
+                // no interactive user, use the clientid/secret for authentication
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
+                
+                // secret for authentication
                 ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-
+            
+                // scopes that client has access to
                 AllowedScopes = {"catalogapi"}
             },
 

@@ -6,7 +6,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:8009"
+      "applicationUrl": "https://localhost:8009"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
@@ -18,6 +18,17 @@
       },
       "publishAllPorts": true,
       "useSSL": true
+    }
+  },
+  "Kestrel": {
+    "Endpoints": {
+      "Https": {
+        "Url": "https://0.0.0.0:8009",
+        "Certificate": {
+          "Path": "/https/localhost-dev-cert.pfx",
+          "Password": "12345678"
+        }
+      }
     }
   }
 }
